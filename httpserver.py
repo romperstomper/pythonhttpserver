@@ -1,5 +1,6 @@
-import socket
 import os
+import re
+import socket
 
 def main():
 
@@ -29,7 +30,15 @@ class Connection(object):
     def read_request(self):
         request_line = self.read_line()
         method, path, version = request_line.split(" ", 3)
-        return method, path, version
+        headers = {}
+        while True:
+            line = self.read_line()
+            if not line: break
+            print "line: ", line
+            key, value = re.split(r':\s', line)
+            headers[key] = value
+
+        return method, path, version, headers
 
 if __name__ == '__main__':
     main()
